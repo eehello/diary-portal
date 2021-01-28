@@ -26,7 +26,7 @@ class MSql
         }
 
         $dateRangeStr = '';
-        if ($dateRange){
+        if ($dateRange && $keywordString == ''){
             $year = substr($dateRange,0,4);
             $month = substr($dateRange,4,2);
             $dateRangeStr = "and  YEAR(date)='${year}' AND MONTH(date)='${month}'";
