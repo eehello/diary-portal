@@ -145,7 +145,7 @@ function diaryStatistic($uid){
     $statisticCategory = $resultCategory->fetch_object();
     $statisticMonthArray = array();
     $tempYear = date('y',time());
-    for ($year=(int)date('Y',time()); $year >= 2019 ; $year--){
+    for ($year=(int)date('Y',time()); $year >= 2010 ; $year--){
         $tempResult = $con->query(MSql::StatisticDiaryByMonth($uid, $year));
         $tempResultArray = $tempResult -> fetch_all(1);
         array_push($statisticMonthArray, new StatisticMonth($year, $tempResultArray));
