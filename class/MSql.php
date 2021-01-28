@@ -14,39 +14,17 @@ date_default_timezone_set('Asia/Shanghai');
 
 class MSql
 {
-
-    public static $CREATEDIARIES = "CREATE TABLE `diaries` (
-                                      `id` int(11) NOT NULL AUTO_INCREMENT,
-                                      `date_create` datetime NOT NULL,
-                                      `content` varchar(255) NOT NULL,
-                                      `category` enum('life','study','film','game','work','sport','bigevent','other') NOT NULL DEFAULT 'life',
-                                      `date_modify` datetime DEFAULT NULL,
-                                      `date` datetime NOT NULL,
-                                      `uid` int(11) NOT NULL,
-                                      PRIMARY KEY (`id`)
-                                    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;";
-    public static $CREATELOGINLOG = "CREATE TABLE `login_log` (
-                                      `id` int(11) NOT NULL AUTO_INCREMENT,
-                                      `date` datetime NOT NULL,
-                                      `email` varchar(50) NOT NULL,
-                                      PRIMARY KEY (`id`)
-                                    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;";
-    public static $CREATEUSERS = "CREATE TABLE `users` (
-                                      `uid` int(11) NOT NULL AUTO_INCREMENT,
-                                      `email` varchar(50) NOT NULL,
-                                      `password` varchar(100) NOT NULL,
-                                      `last_visit_time` datetime DEFAULT NULL,
-                                      `username` varchar(50) DEFAULT NULL,
-                                      `register_time` datetime DEFAULT NULL,
-                                      PRIMARY KEY (`uid`,`email`)
-                                    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;";
-
-
     /************************* 日记操作 *************************/
 
     // 搜索日记
-    public static function SearchDiaries($uid, $categories, $filterShared, $dateRange, $keyword, $startPoint, $pageCount)
+    public static function SearchDiaries($uid, $categories, $filterShared, $dateRange, $keywordString, $startPoint, $pageCount)
     {
+        $keywordArr = explode(',', $keywordString);
+        $keywordFilterStr = '';
+        foreach ($keywordArr as $id => $keyword){
+            $keywordFilterStr =  $keywordFilterStr . "and ( title like '%${keyword}%' or content like '%${keyword}%')";
+        }
+
         $dateRangeStr = '';
         if ($dateRange){
             $year = substr($dateRange,0,4);
@@ -69,7 +47,7 @@ class MSql
                   from diaries 
                   where uid='${uid}' 
                   and (${categoryStr}) ${shareStr} ${dateRangeStr}
-                  and ( title like '%${keyword}%' or content like '%${keyword}%')
+                  ${keywordFilterStr}
                   order by date desc  
                   limit $startPoint, $pageCount";
         return $sql;
