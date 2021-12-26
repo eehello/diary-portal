@@ -37,7 +37,7 @@ if (checkLogin($_COOKIE['diaryEmail'], $_COOKIE['diaryToken'])) {
         case 'search':
         case 'list':
             $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
-            $categories = isset($_COOKIE['diaryCategories']) ? json_decode($_COOKIE['diaryCategories']) : '';
+            $categories = isset($_GET['diaryCategories']) ? json_decode($_GET['diaryCategories']) : '';
             searchDiary($_COOKIE['diaryUid'], $categories, $_GET['filterShared'], $_GET['dateRange']? $_GET['dateRange']: '' , $keyword, $_GET['pageCount'], $_GET['pageNo']);
             break;
         default:
